@@ -34,19 +34,19 @@ public class SecurityConfig {
 	public SecurityFilterChain authorizeRequests(HttpSecurity http) throws Exception
 	{
 		//URL based authorization rules
-		http.cors()
-		.and()
+		http.cors().disable()
+		
 		//disable CSRF token generation n verification
 		.csrf().disable()
 		//configure exception handling for auth entry point - currently not required !
 //		.exceptionHandling().authenticationEntryPoint(authEntry)
 //		.and()
 		.authorizeRequests()
-		.antMatchers("/tours/view","/users/view","/users/signup","/users/signin",
+		.antMatchers("/v2/tours","/users/view","/users/signup","/users/signin",
 				"/v*/api-doc*/**","/swagger-ui/**").permitAll()
 		// only required for JS clnts (react / angular) : for the pre flight requests
 		.antMatchers("/v1/**").hasAuthority("ADMIN")
-		.antMatchers("/v2/**").hasAnyRole("ADMIN","CUSTOMER")
+		.antMatchers("/v2/**").hasAnyAuthority("ADMIN","CUSTOMER")
 		.antMatchers(HttpMethod.OPTIONS).permitAll()
 		.anyRequest().authenticated()
 		.and()
